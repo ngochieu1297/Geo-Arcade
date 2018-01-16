@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -16,14 +15,21 @@ public class GameWindow extends JFrame {
         this.setupGameCanvas();
         this.setVisible(true);
 
+        this.event();
+    }
+
+    private void setupGameCanvas() {
+        this.gameCanvas = new GameCanvas();
+        this.add(this.gameCanvas);
+    }
+
+    private void event() {
         this.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
-                gameCanvas.positionPlayerX = e.getX();
-                gameCanvas.positionPlayerY = e.getY();
+                gameCanvas.positionPlayer.set(e.getX(), e.getY() - 15);
             }
         });
-
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -32,16 +38,11 @@ public class GameWindow extends JFrame {
         });
     }
 
-    private void setupGameCanvas() {
-        this.gameCanvas = new GameCanvas();
-        this.add(this.gameCanvas);
-    }
-
     public void gameLoop() {
         while (true) {
             long currentTime = System.nanoTime();
             if (currentTime - lastTime >= 17_000_000) {
-                this.gameCanvas.positionSquareY++;
+                this.gameCanvas.runAll();
                 this.gameCanvas.renderAll();
                 this.lastTime = currentTime;
             }

@@ -1,59 +1,66 @@
-import javax.imageio.ImageIO;
+import core.GameObject;
+import core.Vector2D;
+import game.background.Background;
+import game.circlesquare.CircleSquare;
+import game.circlesquare.MatrixSquare;
+import game.enemy.Enemy;
+import game.enemy.EnemySpawner;
+import game.player.bullet.BulletPlayer;
+import game.player.Player;
+import game.square.SquareSpawner;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class GameCanvas extends JPanel {
-
-    BufferedImage background;
-    BufferedImage player;
-    BufferedImage square;
+    Background background;
     BufferedImage backBufferd;
     Graphics graphics;
+    Player player;
+    BulletPlayer bulletPlayer;
+    CircleSquare circleSquare;
+    MatrixSquare matrixSquare;
 
-    public int positionPlayerX = 180;
-    public int positionPlayerY = 280;
+    public int positionSquareY2 = 0;
 
-    public int positionSquareX = 80;
-    public int positionSquareY = 0;
+    public Vector2D positionPlayer = new Vector2D(180, 280);
 
     public GameCanvas() {
         this.setSize(400, 600);
         this.setVisible(true);
 
         this.setupBackBuffered();
-
         this.setupBackground();
         this.setupPlayer();
-
-        try {
-            this.square = ImageIO.read(new File("resources/square/enemy_square_small.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.setupSquare();
+        this.setupEnemy();
+        GameObject.add(new CircleSquare());
+        GameObject.add(new MatrixSquare());
     }
 
     private void setupBackground () {
-        try {
-            this.background = ImageIO.read(new File("resources/background/background.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.background = new Background();
     }
 
     private void setupPlayer () {
-        try {
-            this.player = ImageIO.read(new File("resources/player/straight.png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        this.player = new Player();
+        this.bulletPlayer = new BulletPlayer();
+        GameObject.add(player);
+        GameObject.add(bulletPlayer);
     }
 
     private void setupBackBuffered () {
         this.backBufferd = new BufferedImage(400, 600, BufferedImage.TYPE_4BYTE_ABGR);
         this.graphics = this.backBufferd.getGraphics();
+    }
+
+    private void setupSquare () {
+        GameObject.add(new SquareSpawner());
+    }
+
+    private void setupEnemy () {
+        GameObject.add(new EnemySpawner());
     }
 
     @Override
@@ -62,9 +69,13 @@ public class GameCanvas extends JPanel {
     }
 
     public void renderAll() {
-        this.graphics.drawImage(this.background,0,0,null);
-        this.graphics.drawImage(this.player, this.positionPlayerX - 20, this.positionPlayerY - 40,null);
-        this.graphics.drawImage(this.square, this.positionSquareX, this.positionSquareY,null);
+        this.background.render(graphics);
+        GameObject.renderAll(graphics);
         this.repaint();
+    }
+
+    public void runAll() {
+        this.player.position.set(this.positionPlayer);
+        GameObject.runAll();
     }
 }
