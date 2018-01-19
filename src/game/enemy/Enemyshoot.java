@@ -2,6 +2,7 @@ package game.enemy;
 
 import core.FrameCounter;
 import core.GameObject;
+import core.GameObjectManager;
 import game.enemy.bullet.BulletEnemy;
 
 public class Enemyshoot {
@@ -9,10 +10,9 @@ public class Enemyshoot {
 
     public void run(Enemy enemy) {
         if(this.frameCounter.run()) {
-            BulletEnemy bulletEnemy = new BulletEnemy();
+            BulletEnemy bulletEnemy = GameObjectManager.instance.recycle(BulletEnemy.class);
             bulletEnemy.position.set(enemy.position);
             bulletEnemy.velocity.set(0,5);
-            GameObject.add(bulletEnemy);
             this.frameCounter.reset();
         }
     }

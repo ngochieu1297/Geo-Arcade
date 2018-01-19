@@ -1,3 +1,5 @@
+import input.MouseMotionInput;
+
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -24,12 +26,7 @@ public class GameWindow extends JFrame {
     }
 
     private void event() {
-        this.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseMoved(MouseEvent e) {
-                gameCanvas.positionPlayer.set(e.getX(), e.getY() - 15);
-            }
-        });
+        this.addMouseMotionListener(MouseMotionInput.instance);
         this.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {

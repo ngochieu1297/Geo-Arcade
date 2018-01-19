@@ -4,6 +4,7 @@ import core.GameObject;
 import core.Vector2D;
 import physic.BoxCollider;
 import physic.PhysicBody;
+import renderer.ImageRenderer;
 import utils.Utils;
 
 public class BulletPlayer extends GameObject implements PhysicBody {
@@ -14,7 +15,7 @@ public class BulletPlayer extends GameObject implements PhysicBody {
     private  HitSquareEnemy hitSquareEnemy;
 
     public BulletPlayer() {
-        this.image = Utils.loadImage("resources/player/player_bullet.png");
+        this.renderer = new ImageRenderer("resources/player/player_bullet.png");
         this.velocity = new Vector2D();
         this.boxCollider = new BoxCollider(10,10);
         this.hitSquare = new HitSquare();
@@ -30,6 +31,8 @@ public class BulletPlayer extends GameObject implements PhysicBody {
         this.hitSquare.run(this);
         this.hitEnemy.run(this);
         this.hitSquareEnemy.run(this);
+        if(this.position.y <= 0)
+            this.isAlive = false;
     }
 
     public void getHit() {

@@ -4,6 +4,7 @@ import core.GameObject;
 import core.Vector2D;
 import physic.BoxCollider;
 import physic.PhysicBody;
+import renderer.ImageRenderer;
 import utils.Utils;
 
 public class Enemy extends GameObject implements PhysicBody {
@@ -12,7 +13,7 @@ public class Enemy extends GameObject implements PhysicBody {
     public BoxCollider boxCollider;
 
     public Enemy() {
-        this.image = Utils.loadImage("resources/square/enemy_square_medium.png");
+        this.renderer = new ImageRenderer("resources/square/enemy_square_medium.png");
         this.velocity = new Vector2D();
         this.enemyshoot = new Enemyshoot();
         this.boxCollider = new BoxCollider(40,50);
@@ -24,6 +25,9 @@ public class Enemy extends GameObject implements PhysicBody {
         this.position.addUp(this.velocity);
         this.boxCollider.position.set(this.position);
         this.enemyshoot.run(this);
+        if(this.position.y >= 600){
+            this.isAlive = false;
+        }
     }
 
     public void getHit() {

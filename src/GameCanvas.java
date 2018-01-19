@@ -1,9 +1,10 @@
 import core.GameObject;
+import core.GameObjectManager;
 import core.Vector2D;
 import game.background.Background;
 import game.circlesquare.CircleSquare;
+//import game.circlesquare.MatrixSquare;
 import game.circlesquare.MatrixSquare;
-import game.enemy.Enemy;
 import game.enemy.EnemySpawner;
 import game.player.bullet.BulletPlayer;
 import game.player.Player;
@@ -14,17 +15,8 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class GameCanvas extends JPanel {
-    Background background;
     BufferedImage backBufferd;
     Graphics graphics;
-    Player player;
-    BulletPlayer bulletPlayer;
-    CircleSquare circleSquare;
-    MatrixSquare matrixSquare;
-
-    public int positionSquareY2 = 0;
-
-    public Vector2D positionPlayer = new Vector2D(180, 280);
 
     public GameCanvas() {
         this.setSize(400, 600);
@@ -35,19 +27,16 @@ public class GameCanvas extends JPanel {
         this.setupPlayer();
         this.setupSquare();
         this.setupEnemy();
-        GameObject.add(new CircleSquare());
-        GameObject.add(new MatrixSquare());
+//        GameObjectManager.instance.add(new CircleSquare());
+//        GameObjectManager.instance.add(new MatrixSquare());
     }
 
     private void setupBackground () {
-        this.background = new Background();
+        GameObjectManager.instance.add(GameObjectManager.instance.recycle(Background.class));
     }
 
     private void setupPlayer () {
-        this.player = new Player();
-        this.bulletPlayer = new BulletPlayer();
-        GameObject.add(player);
-        GameObject.add(bulletPlayer);
+        GameObjectManager.instance.recycle(Player.class);
     }
 
     private void setupBackBuffered () {
@@ -56,11 +45,11 @@ public class GameCanvas extends JPanel {
     }
 
     private void setupSquare () {
-        GameObject.add(new SquareSpawner());
+        GameObjectManager.instance.add(GameObjectManager.instance.recycle(SquareSpawner.class));
     }
 
     private void setupEnemy () {
-        GameObject.add(new EnemySpawner());
+        GameObjectManager.instance.add(GameObjectManager.instance.recycle(EnemySpawner.class));
     }
 
     @Override
@@ -69,13 +58,11 @@ public class GameCanvas extends JPanel {
     }
 
     public void renderAll() {
-        this.background.render(graphics);
-        GameObject.renderAll(graphics);
+        GameObjectManager.instance.renderAll(graphics);
         this.repaint();
     }
 
     public void runAll() {
-        this.player.position.set(this.positionPlayer);
-        GameObject.runAll();
+        GameObjectManager.instance.runAll();
     }
 }

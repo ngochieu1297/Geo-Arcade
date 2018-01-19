@@ -2,6 +2,7 @@ package game.enemy;
 
 import core.FrameCounter;
 import core.GameObject;
+import core.GameObjectManager;
 
 import java.util.Random;
 
@@ -18,10 +19,9 @@ public class EnemySpawner extends GameObject {
     public void run() {
         super.run();
         if (this.frameCounter.run()) {
-            Enemy enemy = new Enemy();
+            Enemy enemy = GameObjectManager.instance.recycle(Enemy.class);
             enemy.position.set(random.nextInt(350) + 30, 0);
             enemy.velocity.set(0, random.nextInt(2) + 2);
-            GameObject.add(enemy);
             this.frameCounter.reset();
         }
     }
